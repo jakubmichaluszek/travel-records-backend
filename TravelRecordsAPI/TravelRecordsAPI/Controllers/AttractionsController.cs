@@ -71,7 +71,14 @@ namespace TravelRecordsAPI.Controllers
             {
                 attraction.Popularity = "LOW";
             }
-
+            if(attraction.AttractionName.IsNullOrEmpty()||attraction.AttractionName=="null")
+            {
+                return BadRequest("invalid attraction name");
+            }
+            if (attraction.AttractionDesc.IsNullOrEmpty() || attraction.AttractionDesc == "null")
+            {
+                return BadRequest("invalid attraction description");
+            }
             _context.Attractions.Add(attraction);
             try
             {
@@ -157,9 +164,17 @@ namespace TravelRecordsAPI.Controllers
             if (attractionId != attraction.AttractionId)
             {
                 return BadRequest();
-            }          
-
+            }
+            if (attraction.AttractionName.IsNullOrEmpty() || attraction.AttractionName == "null")
+            {
+                return BadRequest("invalid attraction name");
+            }
+            if (attraction.AttractionDesc.IsNullOrEmpty() || attraction.AttractionDesc == "null")
+            {
+                return BadRequest("invalid attraction description");
+            }
             attraction.Score+=1;
+
             if (attraction.Score > this.popularityLimit)
             {
                 attraction.Popularity = "HIGH";

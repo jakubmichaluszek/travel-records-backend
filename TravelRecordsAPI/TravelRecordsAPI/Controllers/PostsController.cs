@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using TravelRecordsAPI.Models;
 
 namespace TravelRecordsAPI.Controllers
@@ -71,8 +72,12 @@ namespace TravelRecordsAPI.Controllers
             {
                 return BadRequest();
             }
-
+            if (post.Story.IsNullOrEmpty()||post.Story=="null")
+            {
+                return BadRequest("invalid story value");
+            }
             post.PostId = this.GetStageId();
+            post.CreationDate = DateTime.Now;
             _context.Posts.Add(post);
             try
             {
@@ -108,6 +113,11 @@ namespace TravelRecordsAPI.Controllers
             {
                 return BadRequest();
             }
+            if (post.Story.IsNullOrEmpty() || post.Story == "null")
+            {
+                return BadRequest("invalid story value");
+            }
+
             _context.Entry(post).State = EntityState.Modified;
 
             try
