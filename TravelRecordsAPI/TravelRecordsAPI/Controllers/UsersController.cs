@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -46,7 +47,7 @@ namespace TravelRecordsAPI.Controllers
         {
             if(_context.Users.Any(e=>e.Username==username))
             {
-                var user = _context.Users.FirstOrDefault(e=>e.Username==username);
+                var user = _context.Users.Where(e=>e.Username==username).FirstOrDefault();
                 if(user.Password==password)
                 {
                     
@@ -87,6 +88,9 @@ namespace TravelRecordsAPI.Controllers
                 }
             }
 
+            PasswordConverter passCov = new PasswordConverter(user.Password);
+            user.Password = passCov.GetHashedPassword();
+
             _context.Entry(user).State = EntityState.Modified;
 
             try
@@ -109,12 +113,21 @@ namespace TravelRecordsAPI.Controllers
         }
 
         // POST: api/Users
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<User>> PostUser(User user)
         {
-            int maxUserId=_context.Users.Max(x=>x.UserId);
-            user.UserId = maxUserId + 1;
+            if(_context.Users.Count()==0)
+            {
+                user.UserId =1;
+            }
+            else
+            {
+                int maxUserId = _context.Users.Max(x => x.UserId);
+                user.UserId = maxUserId + 1;
+            }          
+
+            PasswordConverter passCov = new PasswordConverter(user.Password);
+            user.Password = passCov.GetHashedPassword();
 
             _context.Users.Add(user);
             //username must be unique
