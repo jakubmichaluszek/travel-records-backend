@@ -8,7 +8,6 @@ using TravelRecordsAPI.Services;
 
 namespace TravelRecordsAPI.Controllers
 {
-    [EnableCors("corspolicy")]
     [Route("api/[controller]")]
     [ApiController]
     public class StorageController : ControllerBase

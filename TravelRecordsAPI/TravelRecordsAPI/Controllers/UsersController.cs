@@ -12,7 +12,6 @@ using TravelRecordsAPI.Models;
 
 namespace TravelRecordsAPI.Controllers
 {
-    [EnableCors("corspolicy")]
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
