@@ -4,8 +4,8 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "https://travel-records-backend.azurewebsites.net",
-      //"applicationUrl": "http://localhost:57746",
+      //"applicationUrl": "https://travel-records-backend.azurewebsites.net",
+      "applicationUrl": "http://localhost:57746",
       "sslPort": 44387
     }
   },
@@ -15,8 +15,8 @@
       "dotnetRunMessages": true,
       "launchBrowser": true,
       "launchUrl": "swagger",
-      "applicationUrl": "https://travel-records-backend.azurewebsites.net/swagger",
-      //"applicationUrl": "https://localhost:7263;http://localhost:5263",
+      //"applicationUrl": "https://travel-records-backend.azurewebsites.net/swagger",
+      "applicationUrl": "https://localhost:7263;http://localhost:5263",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
