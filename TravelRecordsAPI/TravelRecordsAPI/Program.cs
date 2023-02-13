@@ -51,11 +51,17 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
 });
 
 builder.Services.AddAuthorization();
+
+//cors
+builder.Services.AddCors(policy => policy.AddPolicy("corspolicy", build =>
+{
+    build.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader().SetIsOriginAllowedToAllowWildcardSubdomains();
+}));
+
+builder.Services.AddAuthentication();
 var app = builder.Build();
 
-app.UseCors(options => options.AllowAnyOrigin()
-                               .AllowAnyMethod()
-                               .AllowAnyHeader());
+app.UseCors("corspolicy");
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -7,6 +8,7 @@ using TravelRecordsAPI.Models;
 
 namespace TravelRecordsAPI.Controllers
 {
+    [EnableCors("corspolicy")]
     [Route("api/[controller]")]
     [ApiController]
     public class PostsController : ControllerBase
