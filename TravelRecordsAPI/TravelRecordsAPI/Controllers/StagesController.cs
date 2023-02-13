@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using TravelRecordsAPI.Models;
 
 namespace TravelRecordsAPI.Controllers
@@ -57,8 +58,17 @@ namespace TravelRecordsAPI.Controllers
             {
                 return BadRequest();
             }
-
+            if(stage.Title=="null"||stage.Title.IsNullOrEmpty())
+            {
+                return BadRequest("invalid title");
+            }
+            if (stage.StageDesc == "null" || stage.StageDesc.IsNullOrEmpty())
+            {
+                return BadRequest("invalid description");
+            }
+            // setting auto values
             stage.StageId = this.GetStageId();
+            stage.CreationDate = DateTime.Now;
             _context.Stages.Add(stage);
             try
             {
@@ -93,6 +103,15 @@ namespace TravelRecordsAPI.Controllers
             {
                 return BadRequest();
             }
+            if (stage.Title == "null" || stage.Title.IsNullOrEmpty())
+            {
+                return BadRequest("invalid title");
+            }
+            if (stage.StageDesc == "null" || stage.StageDesc.IsNullOrEmpty())
+            {
+                return BadRequest("invalid description");
+            }
+
             _context.Entry(stage).State = EntityState.Modified;
 
             try

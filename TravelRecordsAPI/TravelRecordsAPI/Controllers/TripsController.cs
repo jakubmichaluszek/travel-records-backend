@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using TravelRecordsAPI.Models;
 
 namespace TravelRecordsAPI.Controllers
@@ -71,6 +72,15 @@ namespace TravelRecordsAPI.Controllers
             {
                 return BadRequest();
             }
+            if (trip.Title == "null" || trip.Title.IsNullOrEmpty())
+            {
+                return BadRequest("invalid title");
+            }
+            if (trip.TripDesc == "null" || trip.TripDesc.IsNullOrEmpty())
+            {
+                return BadRequest("invalid description");
+            }
+
             _context.Entry(trip).State = EntityState.Modified;
 
             try
@@ -100,9 +110,18 @@ namespace TravelRecordsAPI.Controllers
 
             if (user == null)
             {
-                return BadRequest();
+                return BadRequest("user not found");
             }
 
+            if(trip.Title=="null"||trip.Title.IsNullOrEmpty())
+            {
+                return BadRequest("invalid title");
+            }
+            if (trip.TripDesc == "null" || trip.TripDesc.IsNullOrEmpty())
+            {
+                return BadRequest("invalid description");
+            }
+            trip.CreationDate = DateTime.Now;
             trip.TripId = this.GetTripId();
             _context.Trips.Add(trip);
             try

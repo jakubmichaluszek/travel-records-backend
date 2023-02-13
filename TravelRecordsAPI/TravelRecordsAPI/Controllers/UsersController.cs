@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using TravelRecordsAPI.Models;
 
 namespace TravelRecordsAPI.Controllers
@@ -72,7 +73,20 @@ namespace TravelRecordsAPI.Controllers
                 return BadRequest();
             }
 
-            if(ChangedUsername(user.UserId,user.Username))
+            if (user.Username.IsNullOrEmpty() || user.Username == "null")
+            {
+                return BadRequest("invalid username");
+            }
+            if (user.Password.IsNullOrEmpty())
+            {
+                return BadRequest("invalid password");
+            }
+            if (user.Email.IsNullOrEmpty() || user.Email == "null")
+            {
+                return BadRequest("invalid username");
+            }
+
+            if (ChangedUsername(user.UserId,user.Username))
             {
                 if (UsernameExists(user.Username))
                 {
@@ -125,7 +139,18 @@ namespace TravelRecordsAPI.Controllers
                 int maxUserId = _context.Users.Max(x => x.UserId);
                 user.UserId = maxUserId + 1;
             }          
-
+            if(user.Username.IsNullOrEmpty()||user.Username=="null")
+            {
+                return BadRequest("invalid username");
+            }
+            if (user.Password.IsNullOrEmpty())
+            {
+                return BadRequest("invalid password");
+            }
+            if (user.Email.IsNullOrEmpty() || user.Email == "null")
+            {
+                return BadRequest("invalid username");
+            }
             PasswordConverter passCov = new PasswordConverter(user.Password);
             user.Password = passCov.GetHashedPassword();
 
