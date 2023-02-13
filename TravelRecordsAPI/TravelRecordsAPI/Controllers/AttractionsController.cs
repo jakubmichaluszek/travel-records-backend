@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -18,19 +19,19 @@ namespace TravelRecordsAPI.Controllers
             _context = context;
         }
 
-        [HttpGet]
+        [HttpGet,Authorize]
         public async Task<ActionResult<IEnumerable<Attraction>>> GetAllAttractions()
         {
             return await _context.Attractions.ToListAsync();
         }
 
-        [HttpGet("/popularAttractions")]
+        [HttpGet("/popularAttractions"), Authorize]
         public async Task<ActionResult<IEnumerable<Attraction>>> GetPopularAttractions()
         {
             return await _context.Attractions.Where(x=>x.Popularity=="HIGH").ToListAsync();
         }
 
-        [HttpGet("{stageId}/allStageAttractions")]
+        [HttpGet("{stageId}/allStageAttractions"), Authorize]
         public async Task<ActionResult<IEnumerable<Attraction>>> GetStageAttractions(int stageId)
         {
             var stage=await _context.Stages.FindAsync(stageId);
@@ -48,7 +49,7 @@ namespace TravelRecordsAPI.Controllers
             return attractions;
         }
 
-        [HttpGet("{attractionId}")]
+        [HttpGet("{attractionId}"), Authorize]
         public async Task<ActionResult<Attraction>> GetAttraction(int attractionId)
         {
             var attraction = await _context.Attractions.FindAsync(attractionId);
@@ -61,7 +62,7 @@ namespace TravelRecordsAPI.Controllers
         }
 
 
-        [HttpPost]
+        [HttpPost, Authorize]
         public async Task<ActionResult<Attraction>> PostAttraction(Attraction attraction)
         {
             attraction.AttractionId = GetAttractionId();
@@ -91,7 +92,7 @@ namespace TravelRecordsAPI.Controllers
 
             return Ok(attraction);
         }
-        [HttpPost("{attractionId}/{stageId}")]
+        [HttpPost("{attractionId}/{stageId}"), Authorize]
         public async Task<ActionResult<HasAttraction>> PostRelation(int attractionId, int stageId)
         {
             var attraction = await _context.Attractions.FindAsync(attractionId);
@@ -121,7 +122,7 @@ namespace TravelRecordsAPI.Controllers
             return Ok(relation);
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}"), Authorize]
         public async Task<IActionResult> DeleteAttraction(int id)
         {
             var attraction = await _context.Attractions.FindAsync(id);
@@ -136,7 +137,7 @@ namespace TravelRecordsAPI.Controllers
             return NoContent();
         }
 
-        [HttpDelete("{attractionId}/{stageId}")]
+        [HttpDelete("{attractionId}/{stageId}"), Authorize]
         public async Task<IActionResult> DeleteRelation(int attractionId,int stageId)
         {
             var attraction = await _context.Attractions.FindAsync(attractionId);
@@ -158,7 +159,7 @@ namespace TravelRecordsAPI.Controllers
         }
 
 
-        [HttpPut("{attractionId}")]
+        [HttpPut("{attractionId}"), Authorize]
         public async Task<IActionResult> PutAttraction(int attractionId, Attraction attraction)
         {
             if (attractionId != attraction.AttractionId)
