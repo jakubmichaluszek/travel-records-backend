@@ -13,6 +13,7 @@ namespace TravelRecordsAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class UsersController : ControllerBase
     {
         private readonly CoreDbContext _context;
@@ -22,15 +23,15 @@ namespace TravelRecordsAPI.Controllers
             _context = context;
         }
 
-        // GET: api/Users
-        [HttpGet]
+        //GET: api/Users
+        [HttpGet, Authorize]
         public async Task<ActionResult<IEnumerable<User>>> GetUsers()
         {
             return await _context.Users.ToListAsync();
         }
 
         // GET: api/Users/5
-        [HttpGet("{id}")]
+        [HttpGet("{id}"),Authorize]
         public async Task<ActionResult<User>> GetUser(int id)
         {
             var user = await _context.Users.FindAsync(id);
@@ -43,7 +44,7 @@ namespace TravelRecordsAPI.Controllers
             return user;
         }
 
-        [HttpGet("{username}/{password}")]
+        [HttpGet("{username}/{password}"),Authorize]
         public async Task<ActionResult<User>> GetUser(string username,string password)
         {
             if(_context.Users.Any(e=>e.Username==username))
@@ -63,9 +64,7 @@ namespace TravelRecordsAPI.Controllers
             }
         }
 
-        // PUT: api/Users/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
+        [HttpPut("{id}"),Authorize]
         public async Task<IActionResult> PutUser(int id, User user)
         {
             if (id != user.UserId)
@@ -127,6 +126,7 @@ namespace TravelRecordsAPI.Controllers
         }
 
         // POST: api/Users
+        [AllowAnonymous]
         [HttpPost]
         public async Task<ActionResult<User>> PostUser(User user)
         {
@@ -184,8 +184,7 @@ namespace TravelRecordsAPI.Controllers
             return CreatedAtAction("GetUser", new { id = user.UserId }, user);
         }
 
-        // DELETE: api/Users/5
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}"),Authorize]
         public async Task<IActionResult> DeleteUser(int id)
         {
             var user = await _context.Users.FindAsync(id);

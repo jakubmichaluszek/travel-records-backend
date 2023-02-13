@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -22,14 +23,14 @@ namespace TravelRecordsAPI.Controllers
         }
 
         // GET: api/Trips
-        [HttpGet]
+        [HttpGet, Authorize]
         public async Task<ActionResult<IEnumerable<Trip>>> GetTrips()
         {
             return await _context.Trips.ToListAsync();
         }
 
         // GET: api/Trips/5
-        [HttpGet("{userId}/userTrips")]
+        [HttpGet("{userId}/userTrips"), Authorize]
         public async Task<ActionResult<IEnumerable<Trip>>> GetUsersTrips(int userId)
         {
             var user = await _context.Users.FindAsync(userId);
@@ -44,7 +45,7 @@ namespace TravelRecordsAPI.Controllers
         }
 
         // GET: api/Trips/5
-        [HttpGet("{id}")]
+        [HttpGet("{id}"), Authorize]
         public async Task<ActionResult<Trip>> GetTrip(int id)
         {
             var trip = await _context.Trips.FindAsync(id);
@@ -58,7 +59,7 @@ namespace TravelRecordsAPI.Controllers
         }
 
         // PUT: api/Trips/5
-        [HttpPut("{id}")]
+        [HttpPut("{id}"), Authorize]
         public async Task<IActionResult> PutTrip(int id, Trip trip)
         {
             if (id != trip.TripId)
@@ -103,7 +104,7 @@ namespace TravelRecordsAPI.Controllers
         }
 
         // POST: api/Trips
-        [HttpPost]
+        [HttpPost, Authorize]
         public async Task<ActionResult<Trip>> PostTrip(Trip trip)
         {            
             var user = await _context.Users.FindAsync(trip.UserId);
@@ -145,7 +146,7 @@ namespace TravelRecordsAPI.Controllers
 
         
         // DELETE: api/Trips/5
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}"), Authorize]
         public async Task<IActionResult> DeleteTrip(int id)
         {
             var trip = await _context.Trips.FindAsync(id);

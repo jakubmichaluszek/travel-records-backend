@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -17,13 +18,13 @@ namespace TravelRecordsAPI.Controllers
             _context = context;
         }
 
-        [HttpGet]
+        [HttpGet, Authorize]
         public async Task<ActionResult<IEnumerable<Post>>> GetPosts(int stageId)
         {
             return await _context.Posts.ToListAsync();
         }
 
-        [HttpGet("{stageId}/stagePosts")]
+        [HttpGet("{stageId}/stagePosts"), Authorize]
         public async Task<ActionResult<IEnumerable<Post>>> GetStagePosts(int stageId)
         {
             var stage = await _context.Stages.FindAsync(stageId);
@@ -36,7 +37,7 @@ namespace TravelRecordsAPI.Controllers
             return stagePosts;
         }
 
-        [HttpGet("{tripId}/tripPosts")]
+        [HttpGet("{tripId}/tripPosts"), Authorize]
         public async Task<ActionResult<IEnumerable<Post>>> GetTripPosts(int tripId)
         {
             var trip = await _context.Trips.FindAsync(tripId);
@@ -49,7 +50,7 @@ namespace TravelRecordsAPI.Controllers
             return stagePosts;
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id}"), Authorize]
         public async Task<ActionResult<Post>> GetPost(int id)
         {
             var post = await _context.Posts.FindAsync(id);
@@ -62,7 +63,7 @@ namespace TravelRecordsAPI.Controllers
             return post;
         }
 
-        [HttpPost]
+        [HttpPost,Authorize]
         public async Task<ActionResult<Post>> PostPost(Post post)
         {
             var stage = await _context.Stages.FindAsync(post.StageId);
@@ -98,7 +99,7 @@ namespace TravelRecordsAPI.Controllers
             return CreatedAtAction("GetPost", new { id = post.TripId }, post);
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("{id}"), Authorize]
         public async Task<IActionResult> PutPost(int id, Post post)
         {
             if (id != post.PostId)
@@ -139,7 +140,7 @@ namespace TravelRecordsAPI.Controllers
             return NoContent();
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}"), Authorize]
         public async Task<IActionResult> DeletePost(int id)
         {
             var post = await _context.Posts.FindAsync(id);
