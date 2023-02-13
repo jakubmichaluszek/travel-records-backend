@@ -49,14 +49,14 @@ namespace TravelRecordsAPI.Controllers
 
         private String GenerateToken(User user)
         {
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
-            var credentials=new SigningCredentials(securityKey,SecurityAlgorithms.HmacSha256);
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config.GetSection("Jwt:Key").Value));
+            var credentials=new SigningCredentials(securityKey,SecurityAlgorithms.HmacSha512Signature);
 
             var claims = new[] 
             {
                 new Claim(ClaimTypes.NameIdentifier,user.Username),
-                new Claim(ClaimTypes.Sid,user.UserId.ToString()),
-                new Claim(ClaimTypes.Role,"User")
+                new Claim(ClaimTypes.Sid,user.UserId.ToString())
+               // new Claim(ClaimTypes.Role,"User")
             };
 
             var token=new JwtSecurityToken(claims:claims, 

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -17,13 +18,13 @@ namespace TravelRecordsAPI.Controllers
             _context = context;
         }
 
-        [HttpGet]
+        [HttpGet, Authorize]
         public async Task<ActionResult<IEnumerable<Stage>>> GetStages()
         {
             return await _context.Stages.ToListAsync();
         }
 
-        [HttpGet("{tripId}")]
+        [HttpGet("{tripId}"), Authorize]
         public async Task<ActionResult<IEnumerable<Stage>>> GetTripStages(int tripId)
         {
             var trip = await _context.Trips.FindAsync(tripId);
@@ -36,7 +37,7 @@ namespace TravelRecordsAPI.Controllers
             return tripStages;
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id}"), Authorize]
         public async Task<ActionResult<Stage>> GetStage(int id)
         {
             var stage = await _context.Stages.FindAsync(id);
@@ -49,7 +50,7 @@ namespace TravelRecordsAPI.Controllers
             return stage;
         }
 
-        [HttpPost]
+        [HttpPost, Authorize]
         public async Task<ActionResult<Trip>> PostStage(Stage stage)
         {
             var user = await _context.Users.FindAsync(stage.UserId);
@@ -88,7 +89,7 @@ namespace TravelRecordsAPI.Controllers
 
             return CreatedAtAction("GetStage", new { id = stage.TripId }, stage);
         }
-        [HttpPut("{id}")]
+        [HttpPut("{id}"), Authorize]
         public async Task<IActionResult> PutStage(int id, Stage stage)
         {
             if (id != stage.StageId)
@@ -134,7 +135,7 @@ namespace TravelRecordsAPI.Controllers
         }
 
         // DELETE: api/Trips/5
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}"), Authorize]
         public async Task<IActionResult> DeleteStage(int id)
         {
             var stage = await _context.Stages.FindAsync(id);
