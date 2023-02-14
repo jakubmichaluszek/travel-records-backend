@@ -8,6 +8,7 @@ using TravelRecordsAPI.Models;
 
 namespace TravelRecordsAPI.Controllers
 {
+    [AllowAnonymous]
     [Route("api/[controller]")]
     [ApiController]
     public class StagesController : ControllerBase
