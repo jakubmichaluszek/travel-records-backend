@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using TravelRecordsAPI.Models;
+using TravelRecordsAPI.Models.Dto;
 
 namespace TravelRecordsAPI.Controllers
 {
@@ -32,7 +33,7 @@ namespace TravelRecordsAPI.Controllers
         }
 
         // GET: api/Users/5
-        [HttpGet("{id}"),Authorize]
+        [HttpGet("{id}"), Authorize]
         public async Task<ActionResult<User>> GetUser(int id)
         {
             var user = await _context.Users.FindAsync(id);
@@ -45,15 +46,17 @@ namespace TravelRecordsAPI.Controllers
             return user;
         }
 
-        [HttpGet("{username}/{password}"),Authorize]
+        [HttpGet("{username}/{password}"), Authorize]
         public async Task<ActionResult<User>> GetUser(string username,string password)
         {
             if(_context.Users.Any(e=>e.Username==username))
             {
-                var user = _context.Users.Where(e=>e.Username==username).FirstOrDefault();
-                if(user.Password==password)
-                {
-                    
+                PasswordConverter passConv = new PasswordConverter(password);
+                password = passConv.GetHashedPassword();
+                var user = _context.Users.FirstOrDefault(e => e.Username == username &&
+                                                                e.Password == password);
+                if (user!=null)
+                {                    
                     return user;
                 }
                 ///wrong password
@@ -61,7 +64,7 @@ namespace TravelRecordsAPI.Controllers
             }
             else
             {
-                return NotFound();
+                return NotFound(); //404
             }
         }
 

@@ -51,9 +51,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
 });
 
 //cors
-builder.Services.AddCors(policy => policy.AddPolicy("corspolicy", build =>
+builder.Services.AddCors(policy => policy.AddDefaultPolicy(build =>
 {
-    build.WithOrigins("*").AllowAnyMethod().AllowAnyHeader().SetIsOriginAllowed((host) => true);
+    build.WithOrigins("https://localhost:7263", "https://localhost:3000").AllowAnyHeader().AllowAnyMethod().SetIsOriginAllowed((host) => true).AllowCredentials();
 }));
 
 builder.Services.AddAuthentication();
@@ -64,7 +64,7 @@ builder.Services.AddMvc();
 
 var app = builder.Build();
 
-app.UseCors("corspolicy");
+app.UseCors();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
