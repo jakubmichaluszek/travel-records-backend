@@ -8,7 +8,6 @@ using TravelRecordsAPI.Models;
 
 namespace TravelRecordsAPI.Controllers
 {
-    [AllowAnonymous]
     [Route("api/[controller]")]
     [ApiController]
     public class StagesController : ControllerBase
@@ -26,7 +25,7 @@ namespace TravelRecordsAPI.Controllers
             return await _context.Stages.ToListAsync();
         }
 
-        [HttpGet("{tripId}"), Authorize]
+        [HttpGet("{tripId}/tripsStages"), Authorize]
         public async Task<ActionResult<IEnumerable<Stage>>> GetTripStages(int tripId)
         {
             var trip = await _context.Trips.FindAsync(tripId);
@@ -39,7 +38,7 @@ namespace TravelRecordsAPI.Controllers
             return tripStages;
         }
 
-        [HttpGet("{id}"), Authorize]
+        [HttpGet("{id}/"), Authorize]
         public async Task<ActionResult<Stage>> GetStage(int id)
         {
             var stage = await _context.Stages.FindAsync(id);
