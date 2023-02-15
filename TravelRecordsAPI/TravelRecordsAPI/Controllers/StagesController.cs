@@ -38,7 +38,7 @@ namespace TravelRecordsAPI.Controllers
             return tripStages;
         }
 
-        [HttpGet("{id}/"), Authorize]
+        [HttpGet("{id}"), Authorize]
         public async Task<ActionResult<Stage>> GetStage(int id)
         {
             var stage = await _context.Stages.FindAsync(id);
