@@ -50,7 +50,7 @@ namespace TravelRecordsAPI.Controllers
 
             return stage;
         }
-
+        //
         [HttpPost, Authorize]
         public async Task<ActionResult<Trip>> PostStage(Stage stage)
         {
