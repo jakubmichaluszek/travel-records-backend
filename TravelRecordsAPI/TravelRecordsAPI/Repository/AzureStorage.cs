@@ -5,6 +5,7 @@ using TravelRecordsAPI.Models.ResponseDto;
 using TravelRecordsAPI.Services;
 using Azure;
 using System;
+using Microsoft.IdentityModel.Tokens;
 
 //more info: https://blog.christian-schou.dk/how-to-use-azure-blob-storage-with-asp-net-core/
 
@@ -106,13 +107,50 @@ namespace TravelRecordsAPI.Repository
                 string uri = container.Uri.ToString();
                 var name = file.Name;
                 var fullUri = $"{uri}/{name}";
-
+                
                 files.Add(new ImageDto
                 {
                     Uri = fullUri,
                     Name = name,
                     ContentType = file.Properties.ContentType
                 });
+            }
+
+            // Return all files to the requesting method
+            return files;
+        }
+
+        public async Task<List<ImageDto>> ListStageAsync(int stageId)
+        {
+            // Get a reference to a container named in appsettings.json
+            BlobContainerClient container = new BlobContainerClient(_storageConnectionString, _storageContainerName);
+
+            // Create a new list object for 
+            List<ImageDto> files = new List<ImageDto>();
+
+            await foreach (BlobItem file in container.GetBlobsAsync())
+            {
+                // Add each file retrieved from the storage container to the files list by creating a BlobDto object
+                string uri = container.Uri.ToString();
+                var name = file.Name;
+                var fullUri = $"{uri}/{name}";
+
+                if (!name.IsNullOrEmpty())
+                {
+                    string[] ids = name.Split('_');
+                    if (ids.Length > 3)
+                    {
+                        if (ids[2] ==stageId.ToString())
+                        {
+                            files.Add(new ImageDto
+                            {
+                                Uri = fullUri,
+                                Name = name,
+                                ContentType = file.Properties.ContentType
+                            });
+                        }
+                    }
+                }                
             }
 
             // Return all files to the requesting method
