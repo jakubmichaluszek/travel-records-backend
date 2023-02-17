@@ -28,6 +28,16 @@ namespace TravelRecordsAPI.Controllers
             return StatusCode(StatusCodes.Status200OK, files);
         }
 
+        [HttpGet("{stageId}")]
+        public async Task<IActionResult> GetStageFiles(int stageId)
+        {
+            // Get all files at the Azure Storage Location and return them
+            List<ImageDto>? files = await _storage.ListStageAsync(stageId);
+
+            // Returns an empty array if no files are present at the storage container
+            return StatusCode(StatusCodes.Status200OK, files);
+        }
+
         [HttpPost("{imageId}")]
         public async Task<IActionResult> Upload(IFormFile file,string imageId)
         {

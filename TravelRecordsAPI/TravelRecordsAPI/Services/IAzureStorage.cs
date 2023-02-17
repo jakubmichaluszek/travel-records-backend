@@ -33,5 +33,7 @@ namespace TravelRecordsAPI.Services
         /// </summary>
         /// <returns>Blobs in a list</returns>
         Task<List<ImageDto>> ListAsync();
+
+        Task<List<ImageDto>> ListStageAsync(int stageId);
     }
 }
